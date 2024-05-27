@@ -10,26 +10,29 @@ import { RecoilRoot } from 'recoil';
 import Layout from './components/common/Layout.tsx';
 import CheckoutPage from './pages/checkout/CheckoutPage.tsx';
 
-const router = createBrowserRouter([
-  {
-    element: <Layout />,
-    children: [
-      {
-        path: '/',
-        element: <CartPage />,
-      },
-      {
-        path: '/checkout',
-        element: <CheckoutPage />,
-      },
-      {
-        path: '/payments',
-        element: <PaymentsPage />,
-      },
-      { path: '*', element: <NotFoundPage /> },
-    ],
-  },
-]);
+const router = createBrowserRouter(
+  [
+    {
+      element: <Layout />,
+      children: [
+        {
+          path: '/',
+          element: <CartPage />,
+        },
+        {
+          path: '/checkout',
+          element: <CheckoutPage />,
+        },
+        {
+          path: '/payments',
+          element: <PaymentsPage />,
+        },
+        { path: '*', element: <NotFoundPage /> },
+      ],
+    },
+  ],
+  { basename: '/react-shopping-cart/dist' },
+);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
