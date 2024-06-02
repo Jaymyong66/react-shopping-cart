@@ -24,26 +24,25 @@ const applyCoupon = (
   }
 };
 
-export const couponCalculator = (
-  activeCoupons: CouponType[],
-  products: CartItemType[],
-  orderAmount: number,
-  totalShippingFee: number,
-): number => {
-  let maxDiscount = 0;
+interface CouponCalculatorProps {
+  activeCoupons: CouponType[];
+  checkoutProducts: CartItemType[];
+  orderAmount: number;
+  totalShippingFee: number;
+}
 
-  activeCoupons.forEach((coupon) => {
-    let bestDiscount = 0;
-
-    products.forEach((product) => {
+export const couponCalculator = ({
+  activeCoupons,
+  checkoutProducts,
+  orderAmount,
+  totalShippingFee,
+}: CouponCalculatorProps): number => {
+  return activeCoupons.reduce((maxDiscount, coupon) => {
+    const bestDiscount = checkoutProducts.reduce((bestDiscount, product) => {
       const discount = applyCoupon(coupon, product, totalShippingFee, orderAmount);
-      if (discount > bestDiscount) {
-        bestDiscount = discount;
-      }
-    });
+      return discount > bestDiscount ? discount : bestDiscount;
+    }, 0);
 
-    maxDiscount += bestDiscount;
-  });
-
-  return maxDiscount;
+    return maxDiscount + bestDiscount;
+  }, 0);
 };

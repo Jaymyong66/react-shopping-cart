@@ -1,10 +1,10 @@
 import { useRecoilValue } from 'recoil';
+import { cartItemsCheckedState, fetchCartItemState } from '@store/productStore';
 import CheckoutItem from './CheckoutItem';
-import { isCheckedState, productsState } from '../../../store/productStore';
 
 export default function CheckoutList() {
-  const products = useRecoilValue(productsState);
-  const isCheckedMap = useRecoilValue(isCheckedState);
+  const products = useRecoilValue(fetchCartItemState);
+  const isCheckedMap = useRecoilValue(cartItemsCheckedState);
   const checkoutProducts = products.filter((product) => isCheckedMap[product.id] === true);
   return (
     <div>

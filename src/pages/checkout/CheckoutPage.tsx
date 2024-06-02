@@ -1,24 +1,24 @@
 import { useRecoilValue } from 'recoil';
-import { addOrders } from '../../api';
-import { productsIdState } from '../../store/productStore';
-import useSetAndCleanUpCoupons from '../../hooks/coupon/useSetAndCleanUpCoupons';
-import useNavigatePage from '../../hooks/useNavigatePage';
-import useModalControl from '../../hooks/useModalControl';
-import Button from '../../components/common/Button';
-import Header from '../../components/Header/Header';
+import { addOrders } from '@api/index';
+import { productsIdState } from '@store/productStore';
+import useSetAndCleanUpCoupons from '@hooks/coupon/useSetAndCleanUpCoupons';
+import useNavigatePage from '@hooks/useNavigatePage';
+import useModalControl from '@hooks/useModalControl';
+import Button from '@components/common/Button';
+import Header from '@components/Header/Header';
 import CouponModal from './components/CouponModal/CouponModal';
 import ShippingFeeCheck from './components/ShippingFeeCheck';
 import CheckoutTotals from './components/CheckoutTotals';
 import CheckoutTitle from './components/CheckoutTitle';
-import ROUTES from '../../constants/routes';
+import ROUTES from '@constants/routes';
 import CheckoutList from './components/CheckoutList';
-import BackIcon from '../../asset/back.png';
-import common from '../../styles/common.module.css';
+import BackIcon from '@asset/back.png';
+import Text from '@components/common/Text/Text';
 import styles from './Checkout.module.css';
 
 export default function CheckoutPage() {
-  const navigateCartPage = useNavigatePage(ROUTES.CART);
-  const navigatePaymentsPage = useNavigatePage(ROUTES.PAYMENTS);
+  const navigateCartPage = useNavigatePage(ROUTES.cart);
+  const navigatePaymentsPage = useNavigatePage(ROUTES.payments);
   const productIds = useRecoilValue(productsIdState);
   const { isModalOpen, handleModalOpen } = useModalControl();
 
@@ -29,7 +29,7 @@ export default function CheckoutPage() {
       await addOrders(productIds);
       navigatePaymentsPage();
     } catch (error) {
-      alert(error);
+      console.error(error);
     }
   };
 
@@ -43,11 +43,8 @@ export default function CheckoutPage() {
       <div className={styles.bodyContainer}>
         <CheckoutTitle />
         <CheckoutList />
-        <button
-          className={`${styles.checkoutModalButton} ${common.subtitleText}`}
-          onClick={handleModalOpen}
-        >
-          쿠폰 적용
+        <button className={`${styles.checkoutModalButton}`} onClick={handleModalOpen}>
+          <Text.Subtitle>쿠폰 적용</Text.Subtitle>
         </button>
         <ShippingFeeCheck />
         <CheckoutTotals />

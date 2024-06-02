@@ -1,6 +1,6 @@
 import { useRecoilState } from 'recoil';
-import { isCheckedState } from '../store/productStore';
-import areAllItemsChecked from '../utils/areAllItemsChecked';
+import { cartItemsCheckedState } from '@store/productStore';
+import areAllItemsChecked from '@utils/areAllItemsChecked';
 
 type HookProps = {
   id: number;
@@ -8,7 +8,7 @@ type HookProps = {
 };
 
 const useToggleIndividualChecked = ({ id, setAllChecked }: HookProps) => {
-  const [isCheckedMap, setIsCheckedMap] = useRecoilState(isCheckedState);
+  const [isCheckedMap, setIsCheckedMap] = useRecoilState(cartItemsCheckedState);
   const isChecked = isCheckedMap[id];
 
   const handleToggleSelect = (id: number) => {

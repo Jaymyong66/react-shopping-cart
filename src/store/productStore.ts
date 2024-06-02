@@ -1,25 +1,32 @@
 import { atom, selector, selectorFamily } from 'recoil';
-import { fetchCartItems } from '../api';
+import { fetchCartItems } from '@api/index';
 import { CartItemType } from '../types';
 
-export const productsState = atom({
-  key: 'productsState',
+export const fetchCartItemState = atom({
+  key: 'fetchCartItemState',
   default: selector({
-    key: 'productsState/Default',
+    key: 'fetchCartItemState/Default',
     get: async () => {
-      const products = await fetchCartItems();
-      return products;
+      try {
+        const products = await fetchCartItems();
+        return products;
+      } catch (error) {
+        if (error instanceof Error) {
+          throw new Error(error.message);
+        }
+      }
+      return [];
     },
   }),
 });
 
-export const isCheckedState = atom<Record<number, boolean>>({
-  key: 'isCheckedState',
+export const cartItemsCheckedState = atom<Record<number, boolean>>({
+  key: 'cartItemsCheckedState',
   default: {},
   effects: [
     ({ onSet }) => {
-      onSet((state: Record<number, boolean>) => {
-        window.localStorage.setItem('isChecked', JSON.stringify(state));
+      onSet((newState: Record<number, boolean>) => {
+        window.localStorage.setItem('cartItemsChecked', JSON.stringify(newState));
       });
     },
   ],
@@ -28,7 +35,7 @@ export const isCheckedState = atom<Record<number, boolean>>({
 export const productsIdState = selector({
   key: 'productsIdState',
   get: ({ get }) => {
-    const keys = get(productsState).map((product: CartItemType) => {
+    const keys = get(fetchCartItemState).map((product: CartItemType) => {
       return product.id;
     });
 
@@ -41,7 +48,7 @@ export const productQuantityState = selectorFamily<number, number>({
   get:
     (id: number) =>
     ({ get }) => {
-      const products = get(productsState);
+      const products = get(fetchCartItemState);
       const product = products.find((item) => item.id === id);
       return product ? product.quantity : 0;
     },

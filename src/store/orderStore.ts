@@ -1,12 +1,12 @@
 import { atom, selector } from 'recoil';
+import { CART_POLICY } from '@constants/policy';
 import {
-  isCheckedState,
+  cartItemsCheckedState,
   productQuantityState,
   productsIdState,
-  productsState,
+  fetchCartItemState,
 } from './productStore';
 import { discountAmountState } from './couponStore';
-import { CART_POLICY } from '../constants/policy';
 
 export const additionalShippingFeeStatusState = atom({
   key: 'additionalShippingFeeStatusState',
@@ -16,8 +16,8 @@ export const additionalShippingFeeStatusState = atom({
 export const orderAmountState = selector({
   key: 'orderAmountState',
   get: ({ get }) => {
-    const products = get(productsState);
-    const isCheckedMap = get(isCheckedState);
+    const products = get(fetchCartItemState);
+    const isCheckedMap = get(cartItemsCheckedState);
     const orderAmount = products.reduce((accumulator, product) => {
       const isChecked = isCheckedMap[product.id];
       if (isChecked) {
@@ -45,20 +45,23 @@ export const totalAmountState = selector({
 export const totalProductQuantityState = selector({
   key: 'totalProductQuantityState',
   get: ({ get }) => {
-    let totalCount = 0;
-    let totalQuantity = 0;
-
     const keys = get(productsIdState);
-    const isAllCheckedMap = get(isCheckedState);
-    keys.forEach((key) => {
-      const isChecked = isAllCheckedMap[key];
+    const isAllCheckedMap = get(cartItemsCheckedState);
 
-      if (isChecked === true) {
-        const quantity = get(productQuantityState(key));
-        totalCount++;
-        totalQuantity += quantity;
-      }
-    });
+    const { totalCount, totalQuantity } = keys.reduce(
+      (acc, key) => {
+        const isChecked = isAllCheckedMap[key];
+
+        if (isChecked === true) {
+          const quantity = get(productQuantityState(key));
+          acc.totalCount++;
+          acc.totalQuantity += quantity;
+        }
+
+        return acc;
+      },
+      { totalCount: 0, totalQuantity: 0 },
+    );
 
     return {
       totalCount,
