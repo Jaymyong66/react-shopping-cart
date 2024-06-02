@@ -12,26 +12,29 @@ import { ToastProvider } from './context/ToastProvider';
 import './styles/reset.css';
 import './styles/index.css';
 
-const router = createBrowserRouter([
-  {
-    element: <Layout />,
-    children: [
-      {
-        path: '/',
-        element: <CartPage />,
-      },
-      {
-        path: '/checkout',
-        element: <CheckoutPage />,
-      },
-      {
-        path: '/payments',
-        element: <PaymentsPage />,
-      },
-      { path: '*', element: <ErrorPage errorMessage={'잘못된 경로 입니다.'} /> },
-    ],
-  },
-]);
+const router = createBrowserRouter(
+  [
+    {
+      element: <Layout />,
+      children: [
+        {
+          path: '/',
+          element: <CartPage />,
+        },
+        {
+          path: '/checkout',
+          element: <CheckoutPage />,
+        },
+        {
+          path: '/payments',
+          element: <PaymentsPage />,
+        },
+        { path: '*', element: <ErrorPage errorMessage={'잘못된 경로 입니다.'} /> },
+      ],
+    },
+  ],
+  { basename: '/react-shopping-cart/dist' },
+);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
