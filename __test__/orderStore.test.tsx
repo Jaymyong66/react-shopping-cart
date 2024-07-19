@@ -126,7 +126,7 @@ describe('orderStore 테스트', () => {
         hasAdditionalShippingFee: true,
       });
 
-      expect(result.current.totalShippingFee.baseShippingFee).toEqual(3000);
+      expect(result.current.totalShippingFee.baseShippingFee).toEqual(30000000);
       expect(result.current.totalShippingFee.totalShippingFee).toEqual(6000);
     });
   });
